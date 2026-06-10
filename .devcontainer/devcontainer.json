@@ -13,6 +13,8 @@
     // before any extension activates — the curl-in-postCreate approach raced
     // the extension and left it with a broken partial pac install.
     "ghcr.io/devcontainers/features/dotnet:2": { "version": "10.0", "installUsingApt": false },
+    // GitHub CLI — repo creation, PRs, and "Use this template" flows from inside the container.
+    "ghcr.io/devcontainers/features/github-cli:1": {},
     // Node LTS — for PCF controls (TypeScript) and the Dataverse MCP server (npx).
     "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
     // PowerShell — for the Power Platform admin modules (env/solution scripting).
