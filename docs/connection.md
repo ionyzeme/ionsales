@@ -44,7 +44,7 @@ works headless in the container):
 pac auth create --environment "$DATAVERSE_URL"
 pac auth list
 pac solution list                          # find your unmanaged solution
-pac solution clone --name mark_SalesPilot   # → solutions/mark_SalesPilot (YAML)
+pac solution clone --name inz_SalesPilot   # → solutions/inz_SalesPilot (YAML)
 # after portal edits:
 pac solution sync                           # pull env changes back into the tree
 ```

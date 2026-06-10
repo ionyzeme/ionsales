@@ -1,8 +1,8 @@
 # Dynamics 365 Configuration & Customization — Build Context (Experiment)
 
-> This is the `CLAUDE.md` for a D365 experimentation project. Rename it to `CLAUDE.md`
-> at the root of the new repo. It is the single source of truth Claude reloads each
-> session — keep it current as the project's shape changes.
+> This is the `CLAUDE.md` for a D365 experimentation project — the single source of
+> truth Claude reloads each session. Keep it current as the project's shape changes.
+> Publisher prefix for this project: **`inz_`** (solution: `inz_SalesPilot`).
 
 ## What this is
 An experiment to test whether the "Claude writes, human reviews, iterate fast" method
@@ -79,7 +79,7 @@ Install the **Power Platform CLI** (`pac`), authenticate once, pull *your* solut
 ```bash
 pac auth create --environment https://{yourorg}.crm.dynamics.com
 pac solution list                         # see all solutions (Sales, Project Operations, Default, yours…)
-pac solution clone --name mark_SalesPilot # → YAML source tree (clean git diffs, modern flows/canvas)
+pac solution clone --name inz_SalesPilot # → YAML source tree (clean git diffs, modern flows/canvas)
 # after portal changes:
 pac solution sync                         # pull latest env state back into the same tree
 ```
@@ -118,7 +118,7 @@ both committed to git:
 ### How the layers work together (a typical task)
 1. **Map (L3):** read `docs/schema/*.md` for the shape of the tables involved.
 2. **Keyhole (L1):** `describe` / `read_query` anything the digest doesn't cover; sample live rows.
-3. **Codebase (L2):** edit the unpacked source in `mark_SalesPilot`; `pack` + `import`; verify.
+3. **Codebase (L2):** edit the unpacked source in `inz_SalesPilot`; `pack` + `import`; verify.
 4. Update the digest to reflect the change. Loop closes.
 
 ---
@@ -126,17 +126,17 @@ both committed to git:
 ## ALM model — unmanaged dev → managed distribution (keep the path open)
 The sandbox is disposable, but a few rules keep clean managed promotion free:
 - **Publisher + prefix on day one.** Create them before building anything; everything gets
-  stamped (`mark_…`). This is what makes a clean managed export possible.
+  stamped (`inz_…`). This is what makes a clean managed export possible.
 - **One unmanaged solution = unit of work AND unit of distribution.** Everything you build
-  goes in `mark_SalesPilot`. **NEVER build in the Default solution** — leaked components
+  goes in `inz_SalesPilot`. **NEVER build in the Default solution** — leaked components
   can't be cleanly exported as managed. This is *the* trap.
 - **Extend pre-built tables by segmentation.** When you customize a Sales/PO table, add only
   the **pieces you change** (the new column/form), not the whole managed table. Your managed
   export then layers cleanly on top of Sales + Project Operations downstream.
 - **Managed is only ever an output.** Dev stays unmanaged forever:
   ```bash
-  pac solution export --name mark_SalesPilot --managed       # from the dev source
-  pac solution import --path mark_SalesPilot_managed.zip      # into a QA env (Sales+PO installed first)
+  pac solution export --name inz_SalesPilot --managed       # from the dev source
+  pac solution import --path inz_SalesPilot_managed.zip      # into a QA env (Sales+PO installed first)
   ```
   Never import managed back into dev. QA = Sales + Project Operations + your managed layer —
   a faithful rehearsal of production.
@@ -155,7 +155,7 @@ The sandbox is disposable, but a few rules keep clean managed promotion free:
 │   ├── metadata.xml      (Layer 3a — $metadata dump, greppable reference)
 │   └── decisions.md      (running log of what was tried + why)
 ├── solutions/
-│   └── mark_SalesPilot/  (Layer 2 — pac solution clone YAML tree; the editable source)
+│   └── inz_SalesPilot/  (Layer 2 — pac solution clone YAML tree; the editable source)
 ├── src/                  (optional code-shaped artefacts)
 │   ├── plugins/          (C# plugins, early-bound classes from pac modelbuilder)
 │   └── pcf/              (PCF controls, TypeScript)
@@ -180,10 +180,10 @@ The sandbox is disposable, but a few rules keep clean managed promotion free:
 1. **Admin:** enable Dataverse MCP server + Claude Code client for the sandbox env (admin
    center). Confirm MCP licensing/metering.
 2. **Install `pac` CLI**; `pac auth create --environment <url>`.
-3. **Create publisher + prefix** (`mark_`) and an **unmanaged solution** `mark_SalesPilot`
+3. **Create publisher + prefix** (`inz_`) and an **unmanaged solution** `inz_SalesPilot`
    in the portal.
 4. **Connect MCP** in Claude Code; smoke-test ("show me the tables", "describe opportunity").
-5. **`pac solution clone --name mark_SalesPilot`** into the repo; commit.
+5. **`pac solution clone --name inz_SalesPilot`** into the repo; commit.
 6. **Dump `$metadata`** → `docs/metadata.xml`; optional `pac modelbuilder build` for plugins.
 7. **Generate `docs/schema/sales-pilot.md`** via the MCP.
 8. **Pick the thin slice** and run the build loop.
@@ -199,7 +199,7 @@ Sales+PO surface, small enough to finish.
 
 ## Definition of done (for the experiment)
 - The thin slice works end-to-end in the sandbox.
-- Its entire definition lives in git (`solutions/mark_SalesPilot`), rebuildable via
+- Its entire definition lives in git (`solutions/inz_SalesPilot`), rebuildable via
   `pac solution pack` + `import`.
 - A managed export installs cleanly onto a second (QA) environment that has Sales + Project
   Operations — proving the distribution path.
