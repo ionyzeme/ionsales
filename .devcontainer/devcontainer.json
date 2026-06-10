@@ -5,6 +5,14 @@
   "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm",
 
   "features": {
+    // .NET 10 SDK, side-by-side with the image's .NET 8. pac 2.8.x targets
+    // net10.0, so the tool install (and the Power Platform VS Code extension's
+    // own pac bootstrap) fails against net8 with a misleading
+    // "DotnetToolSettings.xml was not found" error. Installing net10 as a
+    // BUILD-TIME feature guarantees it's present before postCreateCommand AND
+    // before any extension activates — the curl-in-postCreate approach raced
+    // the extension and left it with a broken partial pac install.
+    "ghcr.io/devcontainers/features/dotnet:2": { "version": "10.0", "installUsingApt": false },
     // Node LTS — for PCF controls (TypeScript) and the Dataverse MCP server (npx).
     "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
     // PowerShell — for the Power Platform admin modules (env/solution scripting).
@@ -15,7 +23,8 @@
 
   // Install the Power Platform CLI (pac) cross-platform build. The YAML
   // clone/sync format requires a current pac (>= 2.4.1); the tool install
-  // always pulls latest.
+  // always pulls latest. The .NET 10 SDK it needs is provided by the dotnet
+  // feature above (build-time), so this just installs the global tool.
   "postCreateCommand": "dotnet tool install --global Microsoft.PowerApps.CLI.Tool && pac telemetry disable",
 
   // Load connection values (DATAVERSE_URL, DATAVERSE_API_URL) into the
