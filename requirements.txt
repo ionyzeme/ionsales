@@ -1,0 +1,14 @@
+# Python dependencies for the helper scripts (scripts/*.py).
+# Install: python -m pip install -r requirements.txt
+
+# Dataverse auth + data plane (scripts/auth.py, dv-* skills)
+azure-identity
+requests
+PowerPlatform-Dataverse-Client
+pandas
+msal
+msal-extensions
+
+# AI population layer (scripts/generate_brief.py)
+anthropic
+pydantic
