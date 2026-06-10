@@ -15,6 +15,57 @@ three-layer connection model live in **[`CLAUDE.md`](CLAUDE.md)** — read that 
 4. **Connect & smoke-test** the MCP and `pac auth` per `docs/connection.md`.
 5. **Pick the thin slice** (`CLAUDE.md` → First thin slice) and run the loop.
 
+## Running on a remote mini PC (`ion`)
+
+The devcontainer is host-agnostic and multi-arch — nothing in `.devcontainer/`
+is tied to a particular machine, so it runs unchanged on a dedicated x86 mini PC
+reached over Tailscale (MagicDNS host `ion`, user `iondocker`). The only work is
+client-side wiring plus recreating the gitignored local files on the target box.
+
+**Prereqs on `ion`:** Tailscale up, SSH enabled, **Docker Engine installed**, and
+your laptop's SSH public key in `iondocker`'s `~/.ssh/authorized_keys`.
+
+**1. SSH config** — add to `~/.ssh/config` on your laptop (not in this repo):
+
+```ssh
+Host ion
+    HostName ion
+    User iondocker
+    # IdentityFile ~/.ssh/id_ed25519   # if you use a specific key
+```
+
+If the short name doesn't resolve, use the full MagicDNS name as `HostName`
+(`ion.<your-tailnet>.ts.net` — see `tailscale status`).
+
+**2. Verify** the path and that Docker is reachable:
+
+```bash
+tailscale ping ion
+ssh ion 'docker version'
+```
+
+**3. Open the container on `ion`** (Remote-SSH path — recommended):
+
+1. VS Code → **Remote-SSH: Connect to Host → `ion`**
+2. Clone the repo on the mini PC: `git clone https://github.com/ionyzeme/ionsales.git`
+3. Open the folder → **Dev Containers: Reopen in Container**
+
+Files and the container both live on `ion`; the VS Code UI stays local.
+
+> Alternative (keep editing in your local window, run only the container on `ion`):
+> `docker context create iondev --docker "host=ssh://iondocker@ion"`, then set the
+> VS Code `dev.containers.dockerHost` setting to `ssh://iondocker@ion` and use
+> _Clone Repository in Container Volume_. Remote-SSH is less fiddly.
+
+**4. First-run-on-`ion` checklist** — the gitignored local files don't travel with
+the repo (they hold secrets), so recreate them inside the new container:
+
+- `cp .devcontainer/devcontainer.env.example .devcontainer/devcontainer.env` — the
+  build references it via `runArgs --env-file` and **won't start without it**. Fill in values.
+- Recreate `.env`, or just re-run the `dataverse:dv-connect` flow.
+- Re-do the two device-code sign-ins (DV CLI + `pac`) — the token caches are local
+  to the container's home and don't carry over.
+
 ## Layout
 
 | Path | Purpose |
