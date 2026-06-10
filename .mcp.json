@@ -8,7 +8,11 @@
         "@microsoft/dataverse",
         "mcp",
         "${DATAVERSE_URL:-https://org27cdc0fd.crm11.dynamics.com}"
-      ]
+      ],
+      "env": {
+        "MCP_CLIENT_ID": "0c412cc3-0dd6-449b-987f-05b053db9457",
+        "DATAVERSE_OPERATION_CONTEXT": "app=dataverse-skills/1.5.0;skill=unknown;agent=claude-code"
+      }
     }
   }
 }

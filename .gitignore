@@ -4,6 +4,10 @@
 **/appsettings.local.json
 *.pfx
 *.snk
+# Exception: the disposable-sandbox plug-in dev signing key is committed so the
+# C# assembly is rebuildable from source with a stable public-key token. This is
+# a throwaway dev key for an experiment env — NOT a production signing key.
+!src/plugins/Ion.SalesPilot.Plugins/Ion.SalesPilot.Plugins.snk
 
 # --- Power Platform CLI ---
 .pac/
@@ -26,3 +30,6 @@ node_modules/
 # --- OS / editor noise ---
 .DS_Store
 Thumbs.db
+.token_cache.bin
+__pycache__/
+*.pyc
