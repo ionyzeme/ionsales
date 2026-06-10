@@ -1,0 +1,43 @@
+{
+  "name": "D365 / Power Platform Dev",
+  // .NET SDK base — needed for plugins, pac modelbuilder early-bound classes,
+  // and to install the pac CLI as a global dotnet tool.
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm",
+
+  "features": {
+    // Node LTS — for PCF controls (TypeScript) and the Dataverse MCP server (npx).
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
+    // PowerShell — for the Power Platform admin modules (env/solution scripting).
+    "ghcr.io/devcontainers/features/powershell:1": {},
+    // Azure CLI — handy for service principal / app registration auth flows.
+    "ghcr.io/devcontainers/features/azure-cli:1": {}
+  },
+
+  // Install the Power Platform CLI (pac) cross-platform build. The YAML
+  // clone/sync format requires a current pac (>= 2.4.1); the tool install
+  // always pulls latest.
+  "postCreateCommand": "dotnet tool install --global Microsoft.PowerApps.CLI.Tool && pac telemetry disable",
+
+  // Load connection values (DATAVERSE_URL, DATAVERSE_API_URL) into the
+  // container so .mcp.json and pac scripts can read them. Copy
+  // devcontainer.env.example -> devcontainer.env on a fresh clone first.
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+
+  // Make the pac CLI (a global dotnet tool) available on PATH.
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "microsoft-IsvExpTools.powerplatform-vscode",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "anthropic.claude-code"
+      ]
+    }
+  },
+
+  "remoteUser": "vscode"
+}

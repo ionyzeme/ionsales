@@ -1,0 +1,28 @@
+# --- Secrets / connection details (never commit) ---
+.env
+.devcontainer/devcontainer.env
+**/appsettings.local.json
+*.pfx
+*.snk
+
+# --- Power Platform CLI ---
+.pac/
+bin/
+obj/
+out/
+*.zip            # exported solution archives (rebuild via `pac solution pack`)
+!**/.gitkeep
+
+# --- PCF / Node (Layer 2 src/pcf) ---
+node_modules/
+.pcf-scripts/
+*.tsbuildinfo
+
+# --- .NET (plugins) ---
+*.user
+*.suo
+.vs/
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
