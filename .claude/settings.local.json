@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dataverse auth *)",
+      "Bash(pac auth *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "dataverse"
+  ]
+}

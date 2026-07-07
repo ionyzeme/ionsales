@@ -37,15 +37,6 @@ registered sync **pre-operation** on account **Create + Update** (Update step fi
 - **Validation:** if effective `ion_accounthealth = At Risk` and `ion_brief` is empty → save is blocked.
 - **Freshness:** when `ion_brief` is written/changed → `ion_briefupdatedon` auto-stamped (UTC).
 
-### AI population layer (built — `scripts/generate_brief.py`)
-Reads the account + its open opportunities + contacts, asks **Claude** (`claude-opus-4-8`,
-structured output) to write the brief and rate health, then writes `ion_brief` +
-`ion_accounthealth` back — which trips `AccountBriefGuard` to auto-stamp `ion_briefupdatedon`.
-Run: `python scripts/generate_brief.py --account "Northwind Traders" --write`
-(`--dry-run` to preview context, `--stub` to test offline). Needs `ANTHROPIC_API_KEY` in `.env`.
-
-> Demo data seeded: account **Northwind Traders** + 2 contacts + 3 opportunities.
-
 ---
 
 ## `opportunity` — Opportunity  *(OOB, UserOwned)*

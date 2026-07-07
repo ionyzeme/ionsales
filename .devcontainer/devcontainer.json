@@ -1,8 +1,10 @@
 {
   "name": "D365 / Power Platform Dev",
-  // .NET SDK base — needed for plugins, pac modelbuilder early-bound classes,
-  // and to install the pac CLI as a global dotnet tool.
-  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm",
+  // .NET SDK base via a local Dockerfile. The Dockerfile pins the same
+  // mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm image but first
+  // removes the image's stale Yarn apt source, which otherwise breaks every
+  // feature's `apt-get update` (NO_PUBKEY 62D54FD4003F6525). See Dockerfile.
+  "build": { "dockerfile": "Dockerfile" },
 
   "features": {
     // .NET 10 SDK, side-by-side with the image's .NET 8. pac 2.8.x targets
@@ -20,7 +22,9 @@
     // PowerShell — for the Power Platform admin modules (env/solution scripting).
     "ghcr.io/devcontainers/features/powershell:1": {},
     // Azure CLI — handy for service principal / app registration auth flows.
-    "ghcr.io/devcontainers/features/azure-cli:1": {}
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    //Claude Code — for AI-assisted coding help, from the makers of the popular image upscaling tool Gigapixel.
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
   },
 
   // Install the Power Platform CLI (pac) cross-platform build. The YAML
@@ -51,4 +55,5 @@
   },
 
   "remoteUser": "vscode"
+  
 }
